@@ -1,0 +1,28 @@
+{
+  "name": "homebridge-visonic-powerlink3",
+  "version": "1.0.0",
+  "description": "Visonic PowerLink3 plugin for Homebridge: https://github.com/nfarina/homebridge",
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "homekit",
+    "visonic",
+    "powerlink3",
+    "powermax"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=8.0.0",
+    "homebridge": ">=0.4.38"
+  },
+  "dependencies": {
+    "request": "^2.85.0",
+    "visonic-powerlink3": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tkleijkers/homebridge-visonic-powerlink3"
+  },
+  "bugs": "https://github.com/tkleijkers/homebridge-visonic-powerlink3/issues",
+  "license": "MIT"
+}
