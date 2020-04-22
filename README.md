@@ -1,7 +1,5 @@
 # homebridge-visonic-powerlink3
 
-<img src="https://media.giphy.com/media/dZx8gTNz7BlZ2bWkeO/giphy.gif" align="right" alt="Screen recording of a HomeKit Security System state being changed">
-
 This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic](http://visonic.com) security systems, which have the optional [PowerLink3](https://www.visonic.com/Products/Wireless-Property-Protection/powerlink3-communication-modules) module inside, to be controlled using [Apple HomeKit](https://developer.apple.com/homekit/) (e.g. [in the Home app on iOS, and via Siri](https://www.apple.com/uk/ios/home/))
 
 [Homebridge](https://github.com/nfarina/homebridge) acts as a bridge between HomeKit (on your Apple devices) and (non-HomeKit-supporting) accessories you have. If you don't already have a computer that can be left running Homebridge continuously at home, [you could set up Homebridge on a Raspberry Pi](https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi).
