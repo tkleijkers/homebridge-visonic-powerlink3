@@ -24,7 +24,7 @@ function PowerLink3Accessory(log, config) {
 
 	self.name = config.name;
 	self.pollForChanges = config.pollForChanges || true;
-	self.pollingInterval = config.pollingInterval ? config.pollingInterval*1000 : 10*1000;
+	self.pollingInterval = config.pollingInterval ? config.pollingInterval*1000 : 30*1000;
 
 	let powerLink3Config = {
 		host: config.host,
@@ -158,7 +158,7 @@ PowerLink3Accessory.prototype.getCurrentState = function (callback) {
 
 		if (hapState == undefined) {
 
-			callback(new Error(`There isn't a HAP Characteristic state which corresponds with the PowerLink3's current status – the system may be starting to arm`)); // This scenario happens, for example, when the system has begun arming; allowing people to exit
+			callback(new Error(status + `: There isn't a HAP Characteristic state which corresponds with the PowerLink3's current status – the system may be starting to arm`)); // This scenario happens, for example, when the system has begun arming; allowing people to exit
 
 		} else {
 
