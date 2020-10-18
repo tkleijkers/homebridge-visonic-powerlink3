@@ -4,7 +4,6 @@ This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic]
 
 [Homebridge](https://github.com/nfarina/homebridge) acts as a bridge between HomeKit (on your Apple devices) and (non-HomeKit-supporting) accessories you have. If you don't already have a computer that can be left running Homebridge continuously at home, [you could set up Homebridge on a Raspberry Pi](https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi).
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
 <br><a href="https://www.buymeacoffee.com/tkleijkers" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-black.png" width="150px" height="35px" alt="Buy Me A Coffee" style="height: 35px !important;width: 150px !important;" ></a>
 
 ## Install
