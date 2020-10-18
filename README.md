@@ -4,6 +4,8 @@ This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic]
 
 [Homebridge](https://github.com/nfarina/homebridge) acts as a bridge between HomeKit (on your Apple devices) and (non-HomeKit-supporting) accessories you have. If you don't already have a computer that can be left running Homebridge continuously at home, [you could set up Homebridge on a Raspberry Pi](https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi).
 
+<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="tkleijkers" data-color="#FFDD00" data-emoji="🍺"  data-font="Cookie" data-text="Buy me a Beer" data-outline-color="#000" data-font-color="#000" data-coffee-color="#fff" ></script>
+
 ## Install
 
 1. Install Homebridge by following its [installation steps](https://github.com/nfarina/homebridge#installation)
@@ -26,6 +28,8 @@ This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic]
 			"appType": "com.visonic.PowerMaxApp",
 			"userId": "your-random-guid",
 			"panelWebName": "your-panel-web-name",
+			"userEmail": "youremail@domain.com",
+			"userPassword": "your-secret-password"
 		}
 	]
 ```
@@ -43,6 +47,10 @@ This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic]
 * `panelWebName` **string** – The panel web name as used in the Visonic GO app
 
 * `debug` optional **boolean** – Turns on extensive logging, to help debug issues, when set to `true` (default: `false`)
+
+* `userEmail` **string** - Your e-mail to login to Visonic
+
+* `userPassword` **string** - Your password to login to Visonic
 
 **Optional parameters:**
 
