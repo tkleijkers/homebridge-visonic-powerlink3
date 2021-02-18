@@ -19,6 +19,7 @@ module.exports = function(homebridge) {
 function PowerLink3Accessory(log, config) {
 	let self = this;
 
+	self.previousState = 3;
 	self.log = log;
 	self.debug = config.debug;
 
@@ -65,7 +66,7 @@ PowerLink3Accessory.prototype.poll = function () {
 		self.setupPolling(); // Let's go again!
 	};
 
-	self.getCurrentState(function (error, hapState) {
+	self.getCurrentState(true, function (error, hapState) {
 
 		if (error) {
 			self.log(`Error polling: ${error}`);
@@ -122,14 +123,14 @@ PowerLink3Accessory.prototype.getServices = function() {
 		.setProps({
 			validValues: [0, 1, 3, 4]
 		})
-		.on('get', self.getCurrentState.bind(self));
+		.on('get', self.getCurrentState.bind(self, false));
 
 	securitySystemService
 		.getCharacteristic(Characteristic.SecuritySystemTargetState)
 		.setProps({
 			validValues: [0, 1, 3]
 		})
-		.on('get', self.getCurrentState.bind(self))
+		.on('get', self.getCurrentState.bind(self, false))
 		.on('set', self.setTargetState.bind(self));
  
     self.informationService = informationService;
@@ -142,8 +143,12 @@ PowerLink3Accessory.prototype.getServices = function() {
  * Gets the system state as a HAP Characteristic state
  * @param  {Function} callback - Callback to call with the state (error, hapState)
  */
-PowerLink3Accessory.prototype.getCurrentState = function (callback) {
+PowerLink3Accessory.prototype.getCurrentState = function (poll, callback) {
 	var self = this;
+	if (!poll) {
+		callback(null, self.previousState)
+		// return
+	}
 
 	self.debugLog(`getCurrentState`);
 
@@ -153,7 +158,9 @@ PowerLink3Accessory.prototype.getCurrentState = function (callback) {
 	}, function (error, status) {
 
 		if (error) {
-			callback(error);
+			if (poll)
+				callback(error);
+
 			return;
 		}
 
@@ -165,15 +172,18 @@ PowerLink3Accessory.prototype.getCurrentState = function (callback) {
 		var hapState = hapMap[status]; // Get a HAP state from the provided PowerLink3 status
 
 		if (hapState == undefined) {
-
-			callback(new Error(status + `: There isn't a HAP Characteristic state which corresponds with the PowerLink3's current status – the system may be starting to arm`)); // This scenario happens, for example, when the system has begun arming; allowing people to exit
+			if (poll)
+				callback(new Error(status + `: There isn't a HAP Characteristic state which corresponds with the PowerLink3's current status – the system may be starting to arm`)); // This scenario happens, for example, when the system has begun arming; allowing people to exit
 
 		} else {
-
-			callback(null, hapState);
+			if (poll)
+				callback(null, hapState);
+			else {
+				self.previousState = hapState
+				self.securitySystemService
+					.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(hapState)
+			}
 		}
-
-		// self.lastState = hapState;
 	});
 }
 
@@ -192,8 +202,7 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 		self.log(`'Night' arm was selected, but that's not supported by PowerLink3, so 'home' arm will be set instead`)
 
 		self.securitySystemService
-			.setCharacteristic(Characteristic.SecuritySystemTargetState, 
-				Characteristic.SecuritySystemTargetState.STAY_ARM); // This call will result in this whole function being called again with the STAY_ARM state instead
+			.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(Characteristic.SecuritySystemTargetState.STAY_ARM); // This call will result in this whole function being called again with the STAY_ARM state instead
 
 		callback(null);
 		return;
