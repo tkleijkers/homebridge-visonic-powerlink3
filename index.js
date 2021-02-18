@@ -94,7 +94,7 @@ PowerLink3Accessory.prototype.poll = function () {
 
 		self.securitySystemService
 			.getCharacteristic(Characteristic.SecuritySystemCurrentState)
-			.setValue(hapState);
+			.updateValue(hapState);
 
 		self.previousState = hapState;
 
@@ -119,10 +119,16 @@ PowerLink3Accessory.prototype.getServices = function() {
 
 	securitySystemService
 		.getCharacteristic(Characteristic.SecuritySystemCurrentState)
+		.setProps({
+			validValues: [0, 1, 3, 4]
+		})
 		.on('get', self.getCurrentState.bind(self));
 
 	securitySystemService
 		.getCharacteristic(Characteristic.SecuritySystemTargetState)
+		.setProps({
+			validValues: [0, 1, 3]
+		})
 		.on('get', self.getCurrentState.bind(self))
 		.on('set', self.setTargetState.bind(self));
  
