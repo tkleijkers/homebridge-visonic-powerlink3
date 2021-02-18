@@ -1,6 +1,6 @@
 {
   "name": "homebridge-visonic-powerlink3",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Visonic PowerLink3 plugin for Homebridge: https://github.com/nfarina/homebridge",
   "keywords": [
     "homebridge-plugin",
