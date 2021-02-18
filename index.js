@@ -19,6 +19,7 @@ module.exports = function(homebridge) {
 function PowerLink3Accessory(log, config) {
 	let self = this;
 
+	self.setProcessing = false;
 	self.previousState = 3;
 	self.log = log;
 	self.debug = config.debug;
@@ -66,10 +67,17 @@ PowerLink3Accessory.prototype.poll = function () {
 		self.setupPolling(); // Let's go again!
 	};
 
+	if (self.setProcessing) {
+		done();
+		return;
+	}
+
+
 	self.getCurrentState(true, function (error, hapState) {
 
-		if (error) {
-			self.log(`Error polling: ${error}`);
+		if (error || self.setProcessing) {
+			if (error)
+				self.log(`Error polling: ${error}`);
 			done();
 			return;
 		}
@@ -94,8 +102,9 @@ PowerLink3Accessory.prototype.poll = function () {
 		self.log(`State was externally set to: ${stateDescription}`)
 
 		self.securitySystemService
-			.getCharacteristic(Characteristic.SecuritySystemCurrentState)
-			.updateValue(hapState);
+			.getCharacteristic(Characteristic.SecuritySystemCurrentState).updateValue(hapState)
+		self.securitySystemService
+			.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(hapState)
 
 		self.previousState = hapState;
 
@@ -146,8 +155,7 @@ PowerLink3Accessory.prototype.getServices = function() {
 PowerLink3Accessory.prototype.getCurrentState = function (poll, callback) {
 	var self = this;
 	if (!poll) {
-		callback(null, self.previousState)
-		// return
+		callback(null, self.previousState);
 	}
 
 	self.debugLog(`getCurrentState`);
@@ -178,10 +186,13 @@ PowerLink3Accessory.prototype.getCurrentState = function (poll, callback) {
 		} else {
 			if (poll)
 				callback(null, hapState);
-			else {
-				self.previousState = hapState
+			else if (!self.setProcessing){
+				self.securitySystemService
+					.getCharacteristic(Characteristic.SecuritySystemCurrentState).updateValue(hapState)
 				self.securitySystemService
 					.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(hapState)
+
+				self.previousState = hapState
 			}
 		}
 	});
@@ -194,18 +205,13 @@ PowerLink3Accessory.prototype.getCurrentState = function (poll, callback) {
  */
 PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 	var self = this;
+	self.setProcessing = true;
 
 	self.debugLog(`setTargetState: ${hapState}`);
 
 	if (hapState == Characteristic.SecuritySystemTargetState.NIGHT_ARM) {
-
 		self.log(`'Night' arm was selected, but that's not supported by PowerLink3, so 'home' arm will be set instead`)
-
-		self.securitySystemService
-			.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(Characteristic.SecuritySystemTargetState.STAY_ARM); // This call will result in this whole function being called again with the STAY_ARM state instead
-
-		callback(null);
-		return;
+		hapState == Characteristic.SecuritySystemTargetState.STAY_ARM
 	}
 
 	var stateDescription = self.hapStateToDescription(hapState)
@@ -213,9 +219,9 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 
 	let powerLinkMap = {
 		0: PowerLink3.STATUSES.ARMED_HOME,
-        1: PowerLink3.STATUSES.ARMED_AWAY,
-        // 2: null, // 'Night' unsupported
-        3: PowerLink3.STATUSES.DISARMED
+		1: PowerLink3.STATUSES.ARMED_AWAY,
+		// 2: null, // 'Night' unsupported
+		3: PowerLink3.STATUSES.DISARMED
 	};
 
 	let powerLinkStatus = powerLinkMap[hapState];
@@ -226,11 +232,11 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 
 		self.log(`>>> Simulating state setting`);
 		setTimeout(function () { 
-
-			callback(null);
-
 			self.securitySystemService
-				.setCharacteristic(Characteristic.SecuritySystemCurrentState, hapState);
+				.getCharacteristic(Characteristic.SecuritySystemCurrentState).updateValue(hapState);
+
+			self.setProcessing = false;
+			callback(null);
 
 		}, 2*1000);
 
@@ -240,12 +246,12 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 	self.powerLink3.setStatus(powerLinkStatus, function (error) {
 
 		if (!error) {
-
 			self.securitySystemService
-				.setCharacteristic(Characteristic.SecuritySystemCurrentState, hapState);
+				.getCharacteristic(Characteristic.SecuritySystemCurrentState).updateValue(hapState);
 			self.previousState = hapState; // To aid polling
 		}
 
+		self.setProcessing = false;
 		callback(error);
 	})
 }
