@@ -56,6 +56,6 @@ This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic]
 
 * `pollForChanges` **boolean** – Turns on continued polling of the system state: if the system status gets changed externally (e.g. via a physical keypad), HomeKit will still get notified of the change (default: `true`)
 
-* `pollingInterval` **number** – How long, in seconds, to wait between each poll. Each poll seems quite intensive on the PowerLink2; a value of 10 seconds or greater is recommended to avoid it going unresponsive & restarting. (default: `10`)
+* `pollingInterval` **number** – How long, in seconds, to wait between each poll. Each poll seems quite intensive on the PowerLink2; a value of 10 seconds or greater is recommended to avoid it going unresponsive & restarting. (default: `30`)
 
 * `debug` **boolean** – Turns on extensive logging, to help debug issues, when set to `true` (default: `false`)
