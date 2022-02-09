@@ -23,6 +23,7 @@ function PowerLink3Accessory(log, config) {
 	self.previousState = 3;
 	self.log = log;
 	self.debug = config.debug;
+	self.simulateSetting = false; // Simulation
 
 	self.name = config.name;
 	self.pollForChanges = config.pollForChanges || true;
@@ -248,6 +249,8 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 		if (!error) {
 			self.securitySystemService
 				.getCharacteristic(Characteristic.SecuritySystemCurrentState).updateValue(hapState);
+			self.securitySystemService
+				.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(hapState);
 			self.previousState = hapState; // To aid polling
 		}
 
