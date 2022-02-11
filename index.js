@@ -20,6 +20,7 @@ function PowerLink3Accessory(log, config) {
 	let self = this;
 
 	self.setProcessing = false;
+	self.processingTargetState = 3;
 	self.previousState = 3;
 	self.log = log;
 	self.debug = config.debug;
@@ -157,6 +158,16 @@ PowerLink3Accessory.prototype.getCurrentState = function (poll, callback) {
 	var self = this;
 	if (!poll) {
 		callback(null, self.previousState);
+		return;
+	}
+	if (this.setProcessing) {
+		// Currenty processing a change, return expected new status
+		if (self.processingTargetState !== undefined) {
+			callback(null, self.processingTargetState);
+		} else {
+			callback(null, self.previousState);
+		}
+		return;
 	}
 
 	self.debugLog(`getCurrentState`);
@@ -207,12 +218,13 @@ PowerLink3Accessory.prototype.getCurrentState = function (poll, callback) {
 PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 	var self = this;
 	self.setProcessing = true;
+	self.processingTargetState = hapState;
 
 	self.debugLog(`setTargetState: ${hapState}`);
 
 	if (hapState == Characteristic.SecuritySystemTargetState.NIGHT_ARM) {
 		self.log(`'Night' arm was selected, but that's not supported by PowerLink3, so 'home' arm will be set instead`)
-		hapState == Characteristic.SecuritySystemTargetState.STAY_ARM
+		hapState = Characteristic.SecuritySystemTargetState.STAY_ARM
 	}
 
 	var stateDescription = self.hapStateToDescription(hapState)
