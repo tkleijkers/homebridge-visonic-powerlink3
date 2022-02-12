@@ -222,6 +222,9 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 
 	self.debugLog(`setTargetState: ${hapState}`);
 
+	// Poll powerlink adapter to get panel connected
+	self.powerLink3.getStatus();
+
 	if (hapState == Characteristic.SecuritySystemTargetState.NIGHT_ARM) {
 		self.log(`'Night' arm was selected, but that's not supported by PowerLink3, so 'home' arm will be set instead`)
 		hapState = Characteristic.SecuritySystemTargetState.STAY_ARM
@@ -267,6 +270,7 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 		}
 
 		self.setProcessing = false;
+		self.poll();
 		callback(error);
 	})
 }
