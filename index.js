@@ -259,13 +259,14 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 		return;
 	}
 
+	self.securitySystemService
+		.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(hapState);
+
 	self.powerLink3.setStatus(powerLinkStatus, function (error) {
 
 		if (!error) {
 			self.securitySystemService
 				.getCharacteristic(Characteristic.SecuritySystemCurrentState).updateValue(hapState);
-			self.securitySystemService
-				.getCharacteristic(Characteristic.SecuritySystemTargetState).updateValue(hapState);
 			self.previousState = hapState; // To aid polling
 		}
 
