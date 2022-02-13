@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "one-concurrent": "^1.0.0",
-    "visonic-powerlink3": "^1.3.2"
+    "visonic-powerlink3": "^1.3.3"
   },
   "repository": {
     "type": "git",
