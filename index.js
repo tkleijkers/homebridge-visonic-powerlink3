@@ -218,9 +218,6 @@ PowerLink3Accessory.prototype.getCurrentState = function (poll, callback) {
 PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 	var self = this;
 
-	// Poll powerlink adapter to get panel connected
-	self.poll();
-
 	self.debugLog(`setTargetState: ${hapState}`);
 	self.setProcessing = true;
 	self.processingTargetState = hapState;
@@ -271,7 +268,12 @@ PowerLink3Accessory.prototype.setTargetState = function (hapState, callback) {
 		}
 
 		self.setProcessing = false;
-		self.poll();
+
+		setTimeout(function() {
+			// Poll powerlink adapter to check if status has been updated succesfully
+			self.poll();
+		}, 30*1000)
+
 		callback(error);
 	})
 }
