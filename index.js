@@ -38,7 +38,8 @@ function PowerLink3Accessory(log, config) {
 		panelWebName: config.panelWebName,
 		debug: config.debug,
 		userEmail: config.userEmail,
-		userPassword: config.userPassword
+		userPassword: config.userPassword,
+		restVersion: config.restVersion
 	};
 
 	self.powerLink3 = new PowerLink3(powerLink3Config, log); // Handles PowerLink3 API calls; independent of Homebridge

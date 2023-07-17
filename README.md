@@ -29,7 +29,8 @@ This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic]
 			"userId": "your-random-guid",
 			"panelWebName": "your-panel-web-name",
 			"userEmail": "youremail@domain.com",
-			"userPassword": "your-secret-password"
+			"userPassword": "your-secret-password",
+			"restVersion": "10.0"
 		}
 	]
 ```
@@ -51,6 +52,8 @@ This [Homebridge](https://github.com/nfarina/homebridge) plugin allows [Visonic]
 * `userEmail` **string** - Your e-mail to login to Visonic
 
 * `userPassword` **string** - Your password to login to Visonic
+
+* `restVersion` **string** - Version of the Visonic REST API (latest: 10.0)
 
 **Optional parameters:**
 
